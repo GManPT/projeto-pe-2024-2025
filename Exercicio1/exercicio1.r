@@ -25,6 +25,4 @@ plot <- ggplot(wine_data, aes(x = factor(quality), y = sqrt(residual.sugar))) +
 
 # Display the plot
 print(plot)
-
-# Save the plot as PNG image
 ggsave("wine_quality_boxplot.png", plot = plot, width = 10, height = 6, dpi = 300)
