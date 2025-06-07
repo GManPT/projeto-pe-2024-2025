@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercícios de Probabilidade e Estatística</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        
+        .exercises-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .exercise-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .exercise-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+        
+        .exercise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .exercise-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .exercise-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .exercise-description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stats-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercises-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-chart-line"></i> Probabilidade e Estatística</h1>
+            <p>Exercícios Práticos e Soluções Detalhadas</p>
+        </div>
+        
+        <div class="exercises-grid">
+            <div class="exercise-card">
+                <div class="exercise-number">1</div>
+                <h3 class="exercise-title">Análise de Dados de Vinho</h3>
+                <p class="exercise-description">Análise exploratória com box plots e transformações de dados</p>
+                <a href="exercicio1.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">2</div>
+                <h3 class="exercise-title">Distribuições de Probabilidade</h3>
+                <p class="exercise-description">Estudo de distribuições contínuas e discretas</p>
+                <a href="exercicio2.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">3</div>
+                <h3 class="exercise-title">Análise de Séries Temporais</h3>
+                <p class="exercise-description">Visualização e análise de dados climáticos</p>
+                <a href="exercicio3.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">4</div>
+                <h3 class="exercise-title">Distribuição de Weibull</h3>
+                <p class="exercise-description">Aplicações em fiabilidade e análise de sobrevivência</p>
+                <a href="exercicio4.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">5</div>
+                <h3 class="exercise-title">Testes de Hipóteses</h3>
+                <p class="exercise-description">Métodos estatísticos para validação de modelos</p>
+                <a href="exercicio5.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">6</div>
+                <h3 class="exercise-title">Intervalos de Confiança</h3>
+                <p class="exercise-description">Estimação de parâmetros populacionais</p>
+                <a href="exercicio6.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">7</div>
+                <h3 class="exercise-title">Regressão Linear</h3>
+                <p class="exercise-description">Modelação de relações entre variáveis</p>
+                <a href="exercicio7.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">8</div>
+                <h3 class="exercise-title">Análise de Variância</h3>
+                <p class="exercise-description">Comparação de múltiplas populações</p>
+                <a href="exercicio8.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">9</div>
+                <h3 class="exercise-title">Estatística Não-Paramétrica</h3>
+                <p class="exercise-description">Testes quando não se assumem distribuições específicas</p>
+                <a href="exercicio9.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+            <div class="exercise-card">
+                <div class="exercise-number">10</div>
+                <h3 class="exercise-title">Teste de Ajustamento de Rayleigh</h3>
+                <p class="exercise-description">Validação de modelos probabilísticos específicos</p>
+                <a href="exercicio10.pdf" class="download-btn" target="_blank">
+                    <i class="fas fa-download"></i> Ver PDF
+                </a>
+            </div>
+        </div>
+        
+        <div class="stats-section">
+            <h2><i class="fas fa-analytics"></i> Estatísticas do Projeto</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="exerciseCount">0</span>
+                    <div class="stat-label">Exercícios Disponíveis</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <div class="stat-label">Cobertura Teórica</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">R + LaTeX</span>
+                    <div class="stat-label">Tecnologias Utilizadas</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><i class="fas fa-graduation-cap"></i> Compilado automaticamente via GitHub Actions</p>
+            <p>Última atualização: <span id="currentDate"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        // Count available exercises
+        const exerciseCards = document.querySelectorAll('.exercise-card');
+        document.getElementById('exerciseCount').textContent = exerciseCards.length;
+        
+        // Set current date
+        const now = new Date();
+        document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-PT');
+        
+        // Add smooth scroll animation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
