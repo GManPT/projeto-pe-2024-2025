@@ -1,0 +1,193 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages for formatting and graphics
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+
+% Page geometry
+\geometry{margin=2.5cm}
+
+% R code styling
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{rstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{blue!30!black}
+}
+
+\lstset{style=rstyle}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Distribuição de Irwin-Hall - Exercício 6]
+
+Sejam \( X_1, \ldots, X_n \) variáveis aleatórias contínuas independentes e identicamente distribuídas a \( X \sim \text{uniforme}(0, 1) \). Então \( S_n = \sum_{i=1}^n X_i \) possui distribuição de Irwin-Hall e
+
+\[
+P(S_n \leq x) = \frac{1}{n!} \sum_{k=0}^{\lfloor x \rfloor} (-1)^k \binom{n}{k} (x - k)^n,
+\]
+
+para \( 0 \leq x \leq n \) e onde \(\lfloor x \rfloor\) representa a parte inteira do real \( x \).
+
+\begin{enumerate}
+    \item Obtenha o valor exato de \( p_n = P(S_n \leq x) \), para \( n = 12 \) e \( x = 6.25 \).
+    
+    \item Calcule dois valores aproximados de \( p_n \) recorrendo aos métodos seguintes:
+    
+    \begin{enumerate}
+        \item \textbf{Teorema do limite central} (\( p_{n, \text{TLC}} \))
+        
+        Recorra ao TLC, apesar de \( n \) ser inferior a 30.
+        
+        \item \textbf{Simulação} (\( p_{n, \text{sim}} \))
+        
+        \begin{enumerate}
+            \item Fixando a semente em 4469, gere \( m = 100 \) amostras de dimensão \( n = 12 \) da distribuição de \( X \).
+            
+            \item Calcule um valor simulado de \( S_n \) para cada uma das amostras geradas.
+            
+            \item Obtenha a proporção de valores simulados de \( S_n \) que não excedem 6.25.
+        \end{enumerate}
+    \end{enumerate}
+    
+    \item Determine o desvio absoluto entre o valor exato calculado em 1., \( p_n \), e o valor aproximado obtido em 2a., \( p_{n, \text{TLC}} \).
+    
+    \item Calcule o desvio absoluto entre \( p_n \) e \( p_{n, \text{sim}} \).
+    
+    \item Calcule o quociente entre os desvios calculados em 3. e 4. e apresente o resultado arredondado a 4 casas decimais.
+\end{enumerate}
+
+\end{tcolorbox}
+
+\section*{Código R}
+
+\begin{lstlisting}[language=R]
+# Parameters
+n <- 12
+x <- 6.25
+m <- 100  # number of samples for simulation
+
+# 1. Exact value using Irwin-Hall distribution formula
+# P(S_n <= x) = (1/n!) * sum_{k=0}^{floor(x)} (-1)^k * choose(n,k) * (x-k)^n
+
+exact_probability <- function(n, x) {
+  floor_x <- floor(x)
+  sum_term <- 0
+  
+  for (k in 0:floor_x) {
+    term <- (-1)^k * choose(n, k) * (x - k)^n
+    sum_term <- sum_term + term
+  }
+  
+  return(sum_term / factorial(n))
+}
+
+p_n <- exact_probability(n, x)
+cat("1. Valor exato p_n =", p_n, "\n")
+
+# 2a. Central Limit Theorem approximation
+# For X ~ Uniform(0,1): E(X) = 0.5, Var(X) = 1/12
+# For S_n: E(S_n) = n * 0.5 = 6, Var(S_n) = n * (1/12) = 1
+
+mean_sn <- n * 0.5
+var_sn <- n * (1/12)
+sd_sn <- sqrt(var_sn)
+
+# Standardize and use normal approximation
+z <- (x - mean_sn) / sd_sn
+p_n_tlc <- pnorm(z)
+cat("2a. Aproximacao TLC p_n_TLC =", p_n_tlc, "\n")
+
+# 2b. Simulation
+set.seed(4469)
+
+# Generate m samples of size n from Uniform(0,1)
+sn_values <- numeric(m)
+
+for (i in 1:m) {
+  # Generate n uniform random variables and sum them
+  sample_x <- runif(n, 0, 1)
+  sn_values[i] <- sum(sample_x)
+}
+
+# Calculate proportion of S_n values <= 6.25
+p_n_sim <- mean(sn_values <= x)
+cat("2b. Aproximacao por simulacao p_n_sim =", p_n_sim, "\n")
+
+# 3. Absolute deviation between exact and CLT
+desvio_tlc <- abs(p_n - p_n_tlc)
+cat("3. Desvio absoluto |p_n - p_n_TLC| =", desvio_tlc, "\n")
+
+# 4. Absolute deviation between exact and simulation
+desvio_sim <- abs(p_n - p_n_sim)
+cat("4. Desvio absoluto |p_n - p_n_sim| =", desvio_sim, "\n")
+
+# 5. Ratio of deviations
+quociente <- desvio_tlc / desvio_sim
+cat("5. Quociente dos desvios =", quociente, "\n")
+cat("5. Quociente arredondado a 4 casas decimais =", round(quociente, 4), "\n")
+
+# Additional information
+cat("\nInformacoes adicionais:\n")
+cat("Media de S_n (teorica):", mean_sn, "\n")
+cat("Desvio padrao de S_n (teorico):", sd_sn, "\n")
+cat("Media das simulacoes de S_n:", mean(sn_values), "\n")
+cat("Desvio padrao das simulacoes de S_n:", sd(sn_values), "\n")
+\end{lstlisting}
+
+\section*{Resultados}
+
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Solução]
+Para a distribuição de Irwin-Hall com \( n = 12 \) e \( x = 6.25 \):
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Método} & \textbf{Valor} \\
+\hline
+1. Valor exato \( p_n \) & 0.5975144 \\
+2a. Aproximação TLC \( p_{n,\text{TLC}} \) & 0.5987063 \\
+2b. Aproximação por simulação \( p_{n,\text{sim}} \) & 0.6 \\
+\hline
+3. Desvio absoluto \( |p_n - p_{n,\text{TLC}}| \) & 0.001191937 \\
+4. Desvio absoluto \( |p_n - p_{n,\text{sim}}| \) & 0.002485612 \\
+\hline
+\textbf{5. Quociente dos desvios} & \textbf{0.4795348} \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Resposta final:} O quociente entre os desvios calculados em 3. e 4., arredondado a 4 casas decimais, é \boxed{0.4795}.
+
+\vspace{0.3cm}
+\textit{Observação:} O Teorema do Limite Central proporcionou uma melhor aproximação que a simulação com apenas 100 amostras, resultando num quociente inferior a 1.
+\end{tcolorbox}
+
+\end{document}

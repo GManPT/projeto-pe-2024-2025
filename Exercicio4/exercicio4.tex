@@ -1,0 +1,145 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages for formatting and graphics
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+
+% Page geometry
+\geometry{margin=2.5cm}
+
+% R code styling
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{rstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{blue!30!black}
+}
+
+\lstset{style=rstyle}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Distribuição de Weibull - Exercício 4]
+
+A distribuição de Weibull é aplicada em muitos campos diferentes, como por exemplo, avaliação da fiabilidade de componentes eletrônicas ou de sistemas mecânicos, indústria farmacêutica ou ainda análise de sobrevivência em medicina.
+
+Uma dada variável aleatória \( X \), contínua, não negativa, tem distribuição de Weibull, de parâmetros \( (\lambda, k) \), se a sua função de densidade de probabilidade for dada por
+
+\[
+f_X(x) =
+\begin{cases} 
+\frac{k}{\lambda} \left( \frac{x}{\lambda} \right)^{k-1} \exp \left[ - \left( \frac{x}{\lambda} \right)^k \right], & x \geq 0 \\
+0, & x < 0
+\end{cases}
+\]
+
+onde \( \lambda \in ]0, +\infty [ \) é o chamado parâmetro de escala e \( k \in ]0, +\infty [ \) é o chamado parâmetro de forma. Pode mostrar-se que
+
+\[
+E(X) = \int_0^{+\infty} x f_X(x) \, dx = \lambda \Gamma \left( 1 + \frac{1}{k} \right),
+\]
+
+onde \( \Gamma(\cdot) \) é a chamada função Gama. Esta função é definida pelo integral impróprio
+
+\[
+\Gamma(x) = \int_0^{+\infty} e^{-t} t^{x - 1} \, dt.
+\]
+
+O valor \( \Gamma(x) \) pode ser calculado explicitamente para \( x \) inteiro, obtendo-se
+
+\[
+\Gamma(x) = (x - 1)!.
+\]
+
+Para \( x \) não inteiro é possível calcular valores aproximados usando integração numérica. A função gamma do R faz precisamente isso, o que permite, dados os valores dos parâmetros, \( \lambda \) e \( k \), calcular aproximadamente \( E(X) \). Por outro lado, também é possível calcular um valor aproximado de \( E(X) \), utilizando o método conhecido como integração de Monte Carlo, que consiste em gerar um número muito elevado de observações de \( X \) e calcular a média aritmética respectiva.
+
+Considere uma variável aleatória \( X \) que representa o tempo de vida de uma certa componente aeronáutica (em milhares de horas). Admite-se que \( X \) tem distribuição de Weibull com parâmetros \( \lambda = 18 \) e \( k = 7 \).
+
+\begin{enumerate}
+    \item Calcule o valor esperado de \( X \), usando a função gamma.
+    \item Fixando a semente em 2134, gere uma amostra de dimensão 5000 de \( X \), e use-a para calcular um valor aproximado de \( E(X) \).
+\end{enumerate}
+
+Indique o valor absoluto da diferença entre os valores obtidos em 1. e 2., arredondado a 4 casas decimais.
+
+\end{tcolorbox}
+
+\section*{Código R}
+
+\begin{lstlisting}[language=R]
+# Set parameters for Weibull distribution
+lambda <- 18  # scale parameter
+k <- 7        # shape parameter
+
+# 1. Calculate expected value using gamma function
+# E(X) = lambda * Gamma(1 + 1/k)
+theoretical_mean <- lambda * gamma(1 + 1/k)
+cat("1. Theoretical expected value using gamma function:", theoretical_mean, "\n")
+
+# 2. Monte Carlo approximation
+# Set seed for reproducibility
+set.seed(2134)
+
+# Generate 5000 samples from Weibull distribution
+# Note: R's rweibull uses (shape, scale) parameterization
+sample_size <- 5000
+weibull_samples <- rweibull(sample_size, shape = k, scale = lambda)
+
+# Calculate sample mean
+monte_carlo_mean <- mean(weibull_samples)
+cat("2. Monte Carlo approximation (n=5000):", monte_carlo_mean, "\n")
+
+# Calculate absolute difference
+absolute_difference <- abs(theoretical_mean - monte_carlo_mean)
+cat("Absolute difference:", absolute_difference, "\n")
+cat("Absolute difference (rounded to 4 decimal places):", round(absolute_difference, 4), "\n")
+\end{lstlisting}
+
+\section*{Resultados}
+
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Solução]
+Para uma distribuição de Weibull com parâmetros $\lambda = 18$ (escala) e $k = 7$ (forma):
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Método} & \textbf{Valor} \\
+\hline
+1. Valor esperado teórico & 16.83788 \\
+2. Aproximação Monte Carlo (n=5000) & 16.81799 \\
+\hline
+\textbf{Diferença absoluta} & \textbf{0.0199} \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Resposta final:} O valor absoluto da diferença, arredondado a 4 casas decimais, é \boxed{0.0199}.
+\end{tcolorbox}
+
+\end{document}

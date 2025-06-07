@@ -1,0 +1,78 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages for formatting and graphics
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Page geometry
+\geometry{margin=2.5cm}
+
+% R code styling
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{rstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{blue!30!black}
+}
+
+\lstset{style=rstyle}
+
+\begin{document}
+
+\begin{lstlisting}[language=R]
+library(ggplot2)
+library(readxl)
+library(dplyr)
+
+setwd("/home/alcafache/Documentos/PE/Exercicio2")
+
+# Read and clean data for 2003
+wine_data <- read_excel("wine_prod_EU.xlsx") %>%
+  filter(!is.na(Category), `Product Group` != "Non-Vinified", Year == 2003) %>%
+  mutate(Country_Group = case_when(
+    `Member State` %in% c("France", "Italy", "Spain") ~ `Member State`,
+    TRUE ~ "Others"
+  )) %>%
+  group_by(Country_Group, Category) %>%
+  summarise(Total_Availability = sum(Availability, na.rm = TRUE), .groups = 'drop')
+
+# Create bar chart
+plot <- ggplot(wine_data, aes(x = Category, y = Total_Availability, fill = Country_Group)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Wine Availability by Category and Country Group in 2003",
+       x = "Wine Category", y = "Availability (10^3 hL)", fill = "Country Group") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(type = "qual", palette = "Set2")
+
+print(plot)
+ggsave("wine_availability_2003.png", plot = plot, width = 12, height = 8, dpi = 300)
+\end{lstlisting}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{wine_availability_2003.png}
+\end{figure}
+
+\end{document}

@@ -1,0 +1,153 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages for formatting and graphics
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+
+% Page geometry
+\geometry{margin=2.5cm}
+
+% R code styling
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{rstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{blue!30!black}
+}
+
+\lstset{style=rstyle}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Estimação por Máxima Verossimilhança - Exercício 7]
+
+Considere que a variável aleatória \( X \) representa o comprimento (em cm) dos ovos de uma dada espécie de pássaro e que pode ser modelada pela função densidade de probabilidade
+
+\[
+f_X(x) = \frac{\lambda^\alpha}{\Gamma(\alpha)} x^{\alpha-1} e^{-\lambda x},
+\]
+
+para \( x > 0 \), onde \(\alpha\) e \(\lambda\) são parâmetros com valores positivos desconhecidos e
+
+\[
+\Gamma(\alpha) = \int_0^\infty t^{\alpha-1} e^{-t} \, dt
+\]
+
+denota a função Gama.
+
+Ao deduzir as estimativas de máxima verossimilhança de \(\alpha\) e \(\lambda\), \(\hat{\alpha}\) e \(\hat{\lambda}\), constatará que \(\hat{\lambda}\) se pode escrever como função de \(\hat{\alpha}\) mas que não existe uma solução explícita para \(\hat{\alpha}\). No entanto, \(\hat{\alpha}\) pode ser obtida numericamente por recurso à função \texttt{uniroot} do R. Use o intervalo \([62.2, 77.8]\) como intervalo inicial de pesquisa e não utilize qualquer outro argumento opcional dessa função.
+
+Assuma que \((X_1, \ldots, X_n)\) é uma amostra aleatória de \(X\) e que a observação de \(n = 16\) ovos dessa espécie de pássaro resultou em \(\sum_{i=1}^n x_i = 120.68\) e \(\sum_{i=1}^n \log x_i = 32.2\).
+
+Determine a estimativa de máxima verossimilhança de \((\alpha - 1)/\lambda\), o comprimento modal dos ovos dessa espécie de pássaro, indicando-a arredondada a 2 casas decimais.
+
+\end{tcolorbox}
+
+\section*{Código R}
+
+\begin{lstlisting}[language=R]
+# Given data
+n <- 16
+sum_x <- 120.68
+sum_log_x <- 32.2
+
+# Sample statistics
+x_bar <- sum_x / n
+log_x_bar <- sum_log_x / n
+
+cat("Dados:\n")
+cat("n =", n, "\n")
+cat("sum(x_i) =", sum_x, "\n")
+cat("sum(log(x_i)) =", sum_log_x, "\n")
+cat("x_bar =", x_bar, "\n")
+cat("log_x_bar =", log_x_bar, "\n\n")
+
+# For Gamma distribution with pdf f(x) = (lambda^alpha / Gamma(alpha)) * x^(alpha-1) * exp(-lambda*x)
+# The MLE equations are:
+# 1) lambda_hat = alpha_hat / x_bar
+# 2) digamma(alpha_hat) - log(alpha_hat) + log(x_bar) - log_x_bar = 0
+
+# Define the equation to solve for alpha_hat
+# digamma(alpha) - log(alpha) + log(x_bar) - log_x_bar = 0
+equation_for_alpha <- function(alpha) {
+  digamma(alpha) - log(alpha) + log(x_bar) - log_x_bar
+}
+
+# Use uniroot to find alpha_hat in the interval [62.2, 77.8]
+alpha_hat <- uniroot(equation_for_alpha, interval = c(62.2, 77.8))$root
+
+# Calculate lambda_hat using the relationship lambda_hat = alpha_hat / x_bar
+lambda_hat <- alpha_hat / x_bar
+
+# Calculate the modal length: (alpha - 1) / lambda
+modal_length <- (alpha_hat - 1) / lambda_hat
+
+cat("Estimativas de Maxima Verossimilhanca:\n")
+cat("alpha_hat =", alpha_hat, "\n")
+cat("lambda_hat =", lambda_hat, "\n")
+cat("Comprimento modal (alpha_hat - 1) / lambda_hat =", modal_length, "\n")
+cat("Comprimento modal arredondado a 2 casas decimais =", round(modal_length, 2), "\n")
+
+# Verification: check if our alpha_hat satisfies the equation
+cat("\nVerificacao:\n")
+cat("Valor da equacao em alpha_hat:", equation_for_alpha(alpha_hat), "\n")
+\end{lstlisting}
+
+\section*{Resultados}
+
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Solução]
+Para a estimação por máxima verossimilhança da distribuição Gama com os dados observados:
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Estatística/Estimativa} & \textbf{Valor} \\
+\hline
+\( n \) & 16 \\
+\( \sum_{i=1}^n x_i \) & 120.68 \\
+\( \sum_{i=1}^n \log x_i \) & 32.2 \\
+\( \bar{x} \) & 7.5425 \\
+\( \overline{\log x} \) & 2.0125 \\
+\hline
+\( \hat{\alpha} \) & 62.24955 \\
+\( \hat{\lambda} \) & 8.253173 \\
+\hline
+\textbf{Comprimento modal} \( \frac{\hat{\alpha} - 1}{\hat{\lambda}} \) & \textbf{7.421334} \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Resposta final:} A estimativa de máxima verossimilhança de \( \frac{(\alpha - 1)}{\lambda} \), arredondada a 2 casas decimais, é \boxed{7.42}.
+
+\vspace{0.3cm}
+\textit{Observação:} A verificação confirma que \( \hat{\alpha} \) satisfaz a equação de verossimilhança com erro numérico praticamente nulo (\(1.285 \times 10^{-9}\)).
+\end{tcolorbox}
+
+\end{document}

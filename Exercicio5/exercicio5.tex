@@ -1,0 +1,140 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages for formatting and graphics
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+
+% Page geometry
+\geometry{margin=2.5cm}
+
+% R code styling
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{rstyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=none,                    
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{blue!30!black}
+}
+
+\lstset{style=rstyle}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=Jogo do Grão-Duque da Toscana - Exercício 5]
+
+Conta-se que o Grão-Duque da Toscana (séc. XVI) jogava assiduamente com um adversário o seguinte jogo:
+
+\begin{itemize}
+    \item Em cada jogada, um dos jogadores (sejam A e B) lança três dados cúbicos perfeitos e soma as pontuações obtidas. Se a soma das pontuações for 9 (denotado por ``soma 9''), o jogador A ganha a jogada e, se a soma das pontuações for 10 (denotado por ``soma 10''), será o jogador B a ganhar; caso contrário, ninguém ganha.
+\end{itemize}
+
+O que intrigava o Grão-Duque era que, apesar de 9 e 10 pontos se poderem decompor cada um em 6 maneiras diferentes, o jogador A ganhava com menor frequência do que o jogador B.
+
+Fixando a semente em 2318, simule \( n = 38000 \) jogadas desse jogo. Reporte o valor da diferença entre as frequências relativas com que a ``soma 10'' e a ``soma 9'' são obtidas nessas \( n \) jogadas, arredondada a 4 casas decimais.
+
+\textbf{Nota:} caso use a função \texttt{sample} na simulação dos lançamentos dos dados, NÃO deverá especificar as probabilidades dos resultados possíveis. Por omissão, estes serão considerados equiprováveis.
+
+\end{tcolorbox}
+
+\section*{Código R}
+
+\begin{lstlisting}[language=R]
+# Set seed for reproducibility
+set.seed(2318)
+
+# Number of games to simulate
+n <- 38000
+
+# Initialize counters
+sum_9_count <- 0
+sum_10_count <- 0
+
+# Simulate n games
+for (i in 1:n) {
+  # Roll three dice
+  dice1 <- sample(1:6, 1)
+  dice2 <- sample(1:6, 1)
+  dice3 <- sample(1:6, 1)
+  
+  # Calculate sum
+  total_sum <- dice1 + dice2 + dice3
+  
+  # Count wins for each player
+  if (total_sum == 9) {
+    sum_9_count <- sum_9_count + 1
+  } else if (total_sum == 10) {
+    sum_10_count <- sum_10_count + 1
+  }
+}
+
+# Calculate relative frequencies
+freq_sum_9 <- sum_9_count / n
+freq_sum_10 <- sum_10_count / n
+
+# Calculate difference
+difference <- freq_sum_10 - freq_sum_9
+
+# Display results
+cat("Numero de jogadas simuladas:", n, "\n")
+cat("Numero de 'soma 9':", sum_9_count, "\n")
+cat("Numero de 'soma 10':", sum_10_count, "\n")
+cat("Frequencia relativa 'soma 9':", freq_sum_9, "\n")
+cat("Frequencia relativa 'soma 10':", freq_sum_10, "\n")
+cat("Diferenca (soma 10 - soma 9):", difference, "\n")
+cat("Diferenca arredondada a 4 casas decimais:", round(difference, 4), "\n")
+\end{lstlisting}
+
+\section*{Resultados}
+
+\begin{tcolorbox}[colback=green!5!white,colframe=green!75!black,title=Solução]
+Para a simulação de 38000 jogadas do jogo do Grão-Duque da Toscana:
+
+\begin{center}
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Resultado} & \textbf{Valor} \\
+\hline
+Número de 'soma 9' & 4426 \\
+Número de 'soma 10' & 4779 \\
+\hline
+Frequência relativa 'soma 9' & 0.1164737 \\
+Frequência relativa 'soma 10' & 0.1257632 \\
+\hline
+\textbf{Diferença (soma 10 - soma 9)} & \textbf{0.009289474} \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\textbf{Resposta final:} A diferença entre as frequências relativas, arredondada a 4 casas decimais, é \boxed{0.0093}.
+
+\vspace{0.3cm}
+\textit{Observação:} Como esperado, a frequência relativa da 'soma 10' é maior que a da 'soma 9', confirmando a observação histórica do Grão-Duque.
+\end{tcolorbox}
+
+\end{document}
