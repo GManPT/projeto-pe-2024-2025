@@ -41,7 +41,6 @@
 \begin{document}
 
 \begin{lstlisting}[language=R]
-# Load required libraries
 library(ggplot2)
 
 # Set working directory to the script location
@@ -65,9 +64,6 @@ plot <- ggplot(wine_data, aes(x = factor(quality), y = sqrt(residual.sugar))) +
     axis.title = element_text(size = 12),
     axis.text = element_text(size = 10)
   )
-
-print(plot)
-ggsave("wine_quality_boxplot.png", plot = plot, width = 10, height = 6, dpi = 300)
 \end{lstlisting}
 
 \begin{figure}[htbp]

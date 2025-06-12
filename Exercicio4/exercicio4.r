@@ -1,6 +1,3 @@
-# Load required libraries
-library(stats)
-
 # Set parameters for Weibull distribution
 lambda <- 18  # scale parameter
 k <- 7        # shape parameter

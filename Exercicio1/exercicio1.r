@@ -1,8 +1,7 @@
-# Load required libraries
 library(ggplot2)
 
 # Set working directory to the script location
-setwd("/home/alcafache/Documentos/PE/Exercicio1")
+setwd("/home/vicente/projeto-pe-2024-2025/Exercicio1")
 
 # Read the dataset with full path or ensure CSV is in correct directory
 wine_data <- read.csv("winequality-white-q5.csv")
