@@ -9,7 +9,6 @@ wine_data <- read.csv("winequality-white-q5.csv")
 # Create the box plot with square root transformation of residual.sugar
 plot <- ggplot(wine_data, aes(x = factor(quality), y = sqrt(residual.sugar))) +
   geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
-  geom_jitter(width = 0.2, alpha = 0.3, size = 0.8) +
   labs(
     title = "Square Root of Residual Sugar by Wine Quality",
     x = "Wine Quality",
